@@ -7,7 +7,7 @@ import { Send, Bot, User } from "lucide-react";
 
 interface Message {
   id: number;
-  text: string;
+  text: string | React.ReactNode;
   isBot: boolean;
   timestamp: Date;
 }
@@ -21,11 +21,12 @@ export const Quiz = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);
   const [currentInput, setCurrentInput] = useState("");
-  const [step, setStep] = useState<"welcome" | "name" | "phone" | "completed">("welcome");
+  const [step, setStep] = useState<"welcome" | "name" | "phone" | "completed" | "instagram">("welcome");
   const [quizData, setQuizData] = useState<QuizData>({ nome: "", telefone: "" });
   const webhookUrl = "https://n8n.lockpainel.shop/webhook-test/quiz-hoier";
   const [isLoading, setIsLoading] = useState(false);
   const [showButtons, setShowButtons] = useState(false);
+  const [showInstagramButton, setShowInstagramButton] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
@@ -50,7 +51,7 @@ export const Quiz = () => {
       setIsTyping(true);
       await new Promise(resolve => setTimeout(resolve, 1500));
       
-      addMessage("Você já frequenta a academia?", true);
+      addMessage("Você já segue o Hoier no instagram?", true);
       setIsTyping(false);
       setShowButtons(true);
     };
@@ -60,7 +61,7 @@ export const Quiz = () => {
     }
   }, []);
 
-  const addMessage = (text: string, isBot: boolean) => {
+  const addMessage = (text: string | React.ReactNode, isBot: boolean) => {
     const newMessage: Message = {
       id: Date.now(),
       text,
@@ -117,7 +118,38 @@ export const Quiz = () => {
     setIsTyping(true);
     await new Promise(resolve => setTimeout(resolve, 1500));
     
-    addMessage("Perfeito! Agora preciso do seu nome:", true);
+    if (response === "NÃO") {
+      addMessage(
+        <>
+          Siga meu perfil do insta: <a 
+            href="https://www.instagram.com/hoierr_" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="text-blue-400 hover:text-blue-300 underline"
+          >
+            @hoierr_
+          </a>
+        </>,
+        true
+      );
+      setStep("instagram");
+      setShowInstagramButton(true);
+    } else {
+      addMessage("Perfeito! Você é digno de entrar no nosso grupo. Me envie seu nome:", true);
+      setStep("name");
+    }
+    
+    setIsTyping(false);
+  };
+
+  const handleInstagramButtonClick = async () => {
+    addMessage("Já segui", false);
+    setShowInstagramButton(false);
+    
+    setIsTyping(true);
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    
+    addMessage("Perfeito! Você é digno de entrar no nosso grupo. Me envie seu nome:", true);
     setIsTyping(false);
     setStep("name");
   };
@@ -316,7 +348,7 @@ export const Quiz = () => {
       },
       {
         id: 2,
-        text: "Você já frequenta a academia?",
+        text: "Você já segue o Hoier no instagram?",
         isBot: true,
         timestamp: new Date(),
       },
@@ -324,6 +356,8 @@ export const Quiz = () => {
     setStep("welcome");
     setQuizData({ nome: "", telefone: "" });
     setCurrentInput("");
+    setShowButtons(true);
+    setShowInstagramButton(false);
   };
 
   return (
@@ -409,6 +443,20 @@ export const Quiz = () => {
                     className="bg-red-600 text-white hover:bg-red-700 px-6 py-2 rounded-full"
                   >
                     NÃO
+                  </Button>
+                </div>
+              </div>
+            )}
+            
+            {/* Botão "Já segui" para quando o usuário clica em NÃO */}
+            {showInstagramButton && step === "instagram" && (
+              <div className="flex justify-center">
+                <div className="flex gap-3 max-w-[80%]">
+                  <Button
+                    onClick={handleInstagramButtonClick}
+                    className="bg-blue-600 text-white hover:bg-blue-700 px-6 py-2 rounded-full"
+                  >
+                    Já segui
                   </Button>
                 </div>
               </div>
