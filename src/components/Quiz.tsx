@@ -23,7 +23,7 @@ export const Quiz = () => {
   const [currentInput, setCurrentInput] = useState("");
   const [step, setStep] = useState<"welcome" | "name" | "phone" | "completed" | "instagram">("welcome");
   const [quizData, setQuizData] = useState<QuizData>({ nome: "", telefone: "" });
-  const webhookUrl = "https://n8n.lockpainel.shop/webhook-test/quiz-hoier";
+  const webhookUrl = "https://n8n.lockpainel.shop/webhook/quiz-hoier";
   const [isLoading, setIsLoading] = useState(false);
   const [showButtons, setShowButtons] = useState(false);
   const [showInstagramButton, setShowInstagramButton] = useState(false);
