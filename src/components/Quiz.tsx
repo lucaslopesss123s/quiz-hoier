@@ -337,7 +337,7 @@ export const Quiz = () => {
 
   const resetQuiz = () => {
     // Redirecionar para o grupo do WhatsApp
-    window.open("https://chat.whatsapp.com/F6XQAdu5hKP0aHONSNBDl5?mode=ac_t", "_blank");
+    window.open("https://chat.whatsapp.com/Cb38RteasY51jPlx8RUcBC", "_blank");
     
     setMessages([
       {
